@@ -3,21 +3,12 @@ from django.urls import reverse_lazy
 from django.views import generic
 from django.views.generic import CreateView, UpdateView, DeleteView
 
-from myblog.models.comment import Comment
 from myblog.models.post import Post
 
 
 class PostView(generic.DetailView):
     model = Post
     template_name = 'post.html'
-
-    def get_context_data(self, **kwargs):
-        # Call the base implementation first to get a context
-        context = super().get_context_data(**kwargs)
-        # Add in the username
-        comments = Comment.objects.filter(post=self.kwargs['pk'])
-        context['comments'] = comments
-        return context
 
 
 class PostCreate(LoginRequiredMixin, CreateView):

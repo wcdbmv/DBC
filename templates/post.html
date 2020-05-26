@@ -24,7 +24,7 @@
     <h2>Comments:</h2>
 
     <div class="card-list">
-        {% for comment in comments %}
+        {% for comment in post.comment_set.all %}
             <div class="card shadow-sm mb-4">
                 <div class="card-body">
                     <div class="card-subtitle mb-2 text-muted">
@@ -35,7 +35,7 @@
                 </div>
             </div>
         {% endfor %}
-        {% if not comments %}
+        {% if not post.comment_set.count %}
             <p class="lead">No comments here</p>
         {% endif %}
     </div>
