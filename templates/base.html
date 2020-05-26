@@ -27,9 +27,15 @@
         <div class="collapse navbar-collapse navbar-right" id="navbarNav">
             <ul class="nav navbar-nav ">
                 {% if user.is_authenticated %}
-                    <li class="nav-item"><a class="nav-link" href="{% url 'blog:user_posts' user.username %}">My Blog</a></li>
-                    <li class="nav-item"><a class="nav-link" href="{% url 'blog:create_post' %}">New Post</a></li>
-                    <li class="nav-item"><a class="nav-link" href="{% url 'logout' %}">Sign Out</a></li>
+                    <li class="nav-item {% if user.username in request.get_full_path %}active{% endif %}">
+                        <a class="nav-link" href="{% url 'blog:user_posts' user.username %}">My Blog</a>
+                    </li>
+                    <li class="nav-item {% if request.get_full_path == '/blog/post/create/' %}active{% endif %}">
+                        <a class="nav-link" href="{% url 'blog:create_post' %}">New Post</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'logout' %}">Sign Out</a>
+                    </li>
                 {% else %}
                     <li class="nav-item {% if request.get_full_path == '/register/' %}active{% endif %}">
                         <a class="nav-link" href="{% url 'register' %}">Registration</a>
@@ -44,7 +50,9 @@
 </nav>
 
 <main role="main">
-    {% block content %}{% endblock %}
+    <div class="container">
+        {% block content %}{% endblock %}
+    </div>
 </main>
 
 <hr>

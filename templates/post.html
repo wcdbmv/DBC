@@ -1,54 +1,50 @@
 {% extends "base.html" %}
 
 {% block content %}
-    <div class="container">
-        <div class="jumbotron">
-            <h1 class="display-4">{{ post.title }}</h1>
-            <p class="lead">
-                Created {{ post.pub_date }} by
-                <a href="{% url 'blog:user_posts' post.user.username %}">{{ post.user.username }}</a>
-            </p>
-            <p>{{ post.body }}</p>
-            {% if post.user == user %}
-                <div class="row">
-                    <a href="{% url 'blog:delete_post' post.pk %}" class="col-md-2 pull-right">
-                        <button type="button" class="btn btn-primary btn-block">Delete</button>
-                    </a>
-                    <a href="{% url 'blog:update_post' post.pk %}" class="col-md-2 pull-right">
-                        <button type="button" class="btn btn-primary btn-block">Update</button>
-                    </a>
-                </div>
-            {% endif %}
-        </div>
 
-        <h2>Comments:</h2>
-
-        <div class="card-list">
-            {% for comment in comments %}
-                <div class="card shadow-sm mb-4">
-                    <div class="card-body">
-                        <div class="card-subtitle mb-2 text-muted">
-                            Created {{ comment.pub_date }} by
-                            <a href="{% url 'blog:user_posts' comment.user.username %}">{{ comment.user.username }}</a>
-                        </div>
-                        <p class="card-text"> {{ comment.body }}</p>
-                    </div>
-                </div>
-            {% endfor %}
-            {% if not comments %}
-                <p class="lead">No comments here</p>
-            {% endif %}
-        </div>
-
-        <!-- Show Comment button only if User is authenticated -->
-        {% if user.is_authenticated %}
-
-            <!-- Comment button -->
-            <a href="{% url 'blog:create_comment' post.pk %}" class="col-md-2 pull-right">
-                <button type="button" class="btn btn-primary btn-block">Comment</button>
-            </a>
-
+    <div class="jumbotron">
+        <h1 class="display-4">{{ post.title }}</h1>
+        <p class="lead">
+            Created {{ post.pub_date }} by
+            <a href="{% url 'blog:user_posts' post.user.username %}">{{ post.user.username }}</a>
+        </p>
+        <p>{{ post.body }}</p>
+        {% if post.user == user %}
+            <div class="row">
+                <a href="{% url 'blog:delete_post' post.pk %}" class="col-md-2 pull-right">
+                    <button type="button" class="btn btn-primary btn-block">Delete</button>
+                </a>
+                <a href="{% url 'blog:update_post' post.pk %}" class="col-md-2 pull-right">
+                    <button type="button" class="btn btn-primary btn-block">Update</button>
+                </a>
+            </div>
         {% endif %}
-
     </div>
+
+    <h2>Comments:</h2>
+
+    <div class="card-list">
+        {% for comment in comments %}
+            <div class="card shadow-sm mb-4">
+                <div class="card-body">
+                    <div class="card-subtitle mb-2 text-muted">
+                        Created {{ comment.pub_date }} by
+                        <a href="{% url 'blog:user_posts' comment.user.username %}">{{ comment.user.username }}</a>
+                    </div>
+                    <p class="card-text"> {{ comment.body }}</p>
+                </div>
+            </div>
+        {% endfor %}
+        {% if not comments %}
+            <p class="lead">No comments here</p>
+        {% endif %}
+    </div>
+
+    <!-- Show Comment button only if User is authenticated -->
+    {% if user.is_authenticated %}
+        <a href="{% url 'blog:create_comment' post.pk %}" class="col-md-2 pull-right">
+            <button type="button" class="btn btn-primary btn-block">Comment</button>
+        </a>
+
+    {% endif %}
 {% endblock content %}
