@@ -24,7 +24,7 @@
     <h2>Comments:</h2>
 
     <div class="card-list">
-        {% for comment in post.comment_set.all %}
+        {% for comment in object_list %}
             <div class="card shadow-sm mb-4">
                 <div class="card-body">
                     <div class="card-subtitle mb-2 text-muted">
@@ -45,6 +45,8 @@
         <a href="{% url 'blog:create_comment' post.pk %}" class="col-md-2 pull-right">
             <button type="button" class="btn btn-primary btn-block">Comment</button>
         </a>
-
     {% endif %}
+
+    {% include "pagination.html" %}
+
 {% endblock content %}

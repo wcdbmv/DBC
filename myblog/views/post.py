@@ -1,14 +1,20 @@
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.urls import reverse_lazy
-from django.views import generic
-from django.views.generic import CreateView, UpdateView, DeleteView
+from django.views.generic import CreateView, UpdateView, DeleteView, DetailView
+from django.views.generic.list import MultipleObjectMixin
 
 from myblog.models.post import Post
 
 
-class PostView(generic.DetailView):
+class PostView(DetailView, MultipleObjectMixin):
     model = Post
     template_name = 'post.html'
+    paginate_by = 5
+
+    def get_context_data(self, **kwargs):
+        object_list = Post.objects.get(pk=self.kwargs['pk']).comment_set.all()
+        context = super().get_context_data(object_list=object_list, **kwargs)
+        return context
 
 
 class PostCreate(LoginRequiredMixin, CreateView):
