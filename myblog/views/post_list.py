@@ -30,7 +30,7 @@ class BlogView(ListView):
         user = get_object_or_404(User, username=username)
         self.kwargs['first_name'] = user.first_name
         self.kwargs['last_name'] = user.last_name
-        return Post.objects.filter(user=user)
+        return Post.objects.filter(user=user).order_by(self.get_ordering())
 
     def get_ordering(self):
         return order_by(self.request.GET.get('order_by'))
@@ -48,7 +48,7 @@ class TagView(ListView):
     paginate_by = 5
 
     def get_queryset(self):
-        return Post.objects.filter(tags__tag=self.kwargs['tag'])
+        return Post.objects.filter(tags__tag=self.kwargs['tag']).order_by(self.get_ordering())
 
     def get_ordering(self):
         return order_by(self.request.GET.get('order_by'))
