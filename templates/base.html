@@ -1,5 +1,6 @@
 <!-- this is base template with navbar and footer -->
 {% load static %}
+{% load url_replace %}
 
 <!doctype html>
 <html lang="en">
@@ -44,6 +45,15 @@
                         <a class="nav-link" href="{% url 'login' %}">Login</a>
                     </li>
                 {% endif %}
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Order by</a>
+                    <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+                        <a class="dropdown-item" href="?{% url_replace 'order_by' '-pub_date' %}">-pub_date</a>
+                        <a class="dropdown-item" href="?{% url_replace 'order_by' 'pub_date' %}">pub_date</a>
+                        <a class="dropdown-item" href="?{% url_replace 'order_by' '-rating' %}">-rating</a>
+                        <a class="dropdown-item" href="?{% url_replace 'order_by' 'rating' %}">rating</a>
+                    </div>
+                </li>
             </ul>
         </div>
     </div>
