@@ -3,6 +3,7 @@ from django.contrib.contenttypes.fields import GenericRelation
 from django.db import models
 from django.urls import reverse
 
+from myblog.models.tag import Tag
 from myblog.models.vote import Vote
 
 
@@ -11,6 +12,7 @@ class Post(models.Model):
     title = models.CharField(max_length=80)
     body = models.TextField()
     pub_date = models.DateTimeField('date published', auto_now_add=True)
+    tags = models.ManyToManyField(to=Tag, related_name='posts')
     rating = models.SmallIntegerField(default=0)
     votes = GenericRelation(Vote)
 
