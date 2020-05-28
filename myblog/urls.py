@@ -1,15 +1,15 @@
 from django.urls import path
 
 from myblog.views.comment import CommentCreate
-from myblog.views.home import HomeView
 from myblog.views.post import PostView, PostCreate, PostUpdate, PostDelete
+from myblog.views.post_list import FeedView, BlogView, TagView
 
 app_name = 'blog'
 urlpatterns = [
-    # ex: /blog/
-    path('', HomeView.as_view(), name='home'),
-    # ex: /blog/wcdbmv
-    path('<str:username>', HomeView.as_view(), name='user_posts'),
+    # ex: /blog/feed/
+    path('feed/', FeedView.as_view(), name='feed'),
+    # ex: /blog/user/wcdbmv
+    path('user/<str:username>', BlogView.as_view(), name='user_posts'),
     # ex: /blog/post/5/
     path('post/<int:pk>/', PostView.as_view(), name='post'),
     # ex: /blog/post/create/
@@ -20,4 +20,6 @@ urlpatterns = [
     path('post/<int:pk>/delete/', PostDelete.as_view(), name='delete_post'),
     # ex: /blog/post/5/comment/
     path('post/<int:pk>/comment/', CommentCreate.as_view(), name='create_comment'),
+    # ex: /blog/tag/job
+    path('tag/<str:tag>/', TagView.as_view(), name='tag'),
 ]

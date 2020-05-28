@@ -6,8 +6,8 @@
                     <h1 class="card-title"><a href="{% url 'blog:post' object.pk %}">{{ object.title }}</a></h1>
                 {% endif %}
                 <div class="card-subtitle mb-2 text-muted">
-                    <span class="vote">
-                        <div class="btn-group btn-group-sm mr-2" role="group">
+                    <span class="vote mr-2">
+                        <div class="btn-group btn-group-sm" role="group">
                             {% if user.is_authenticated %}
                                 <button type="button" class="btn btn-outline-success"><b>+</b></button>
                                 <button type="button" class="btn btn-outline-secondary" disabled>{{ object.rating }}</button>
@@ -19,8 +19,18 @@
                             {% endif %}
                         </div>
                     </span>
-                    Created at {{ object.pub_date }} by
+                    <span class="info mr-2">
+                        Created at {{ object.pub_date }} by
                     <a href="{% url 'blog:user_posts' object.user.username %}">{{ object.user.username }}</a>
+                    </span>
+                    {% if object.tags.all %}  {# it is a post #}
+                        <span class="tags">
+                            Tags:
+                            {% for tag in object.tags.all %}
+                                <a href="{% url 'blog:tag' tag %}">{{ tag }}</a>
+                            {% endfor %}
+                        </span>
+                    {% endif %}
                 </div>
                 <p class="card-text"> {{ object.body }}</p>
             </div>
