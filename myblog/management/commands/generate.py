@@ -1,4 +1,5 @@
 from django.core.management.base import BaseCommand, CommandError
+from django.contrib.auth.hashers import make_password
 from django.contrib.auth.models import User
 from django.contrib.contenttypes.models import ContentType
 from faker import Faker
@@ -29,7 +30,7 @@ class Command(BaseCommand):
                     first_name=(first_name := fake.first_name()),
                     last_name=(last_name := fake.last_name()),
                     username=(username := f'{first_name}{last_name}{offset_id + i}'),
-                    password=f'{username}password',
+                    password=make_password(f'{username}password', None, 'md5'),
                     email=f'{username}@example.com',
                 )
                 for i in range(users)
@@ -110,6 +111,6 @@ class Command(BaseCommand):
         print(f'Generate {options["comments"]} comments')
         self.create_comments(options['comments'])
         print(f'Generate up to {options["votes_per_post_max"]} votes for each post')
-        self.generate_votes_for_model(Post, options["votes_on_post_max"])
-        print(f'Generate up to {options["votes_per_comment_max"]} votes on each comment')
-        self.generate_votes_for_model(Comment, options["votes_on_comment_max"])
+        self.generate_votes_for_model(Post, options["votes_per_post_max"])
+        print(f'Generate up to {options["votes_per_comment_max"]} votes for each comment')
+        self.generate_votes_for_model(Comment, options["votes_per_comment_max"])
