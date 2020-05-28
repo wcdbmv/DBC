@@ -20,7 +20,7 @@
         {% endif %}
 
         {% if page_obj.number > 3 %}
-            <li class="page-item"><a class="page-link" href="?page={{ page_obj.number|add:"-1" }}">{{ page_obj.number|add:"-1" }}</a></li>
+            <li class="page-item"><a class="page-link" href="?page={{ page_obj.previous_page_number }}">{{ page_obj.previous_page_number }}</a></li>
         {% endif %}
 
         <li class="page-item active"><a class="page-link" href="#">{{ page_obj.number }}</a></li>
