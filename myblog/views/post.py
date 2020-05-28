@@ -4,6 +4,7 @@ from django.views.generic import CreateView, UpdateView, DeleteView, DetailView
 from django.views.generic.list import MultipleObjectMixin
 
 from myblog.models.post import Post
+from myblog.views.post_list import order_by
 
 
 class PostView(DetailView, MultipleObjectMixin):
@@ -12,7 +13,8 @@ class PostView(DetailView, MultipleObjectMixin):
     paginate_by = 5
 
     def get_context_data(self, **kwargs):
-        object_list = Post.objects.get(pk=self.kwargs['pk']).comment_set.all()
+        order = order_by(self.request.GET.get('order_by'))
+        object_list = Post.objects.get(pk=self.kwargs['pk']).comment_set.order_by(order)
         context = super().get_context_data(object_list=object_list, **kwargs)
         return context
 
