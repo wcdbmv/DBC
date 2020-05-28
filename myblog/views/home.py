@@ -8,7 +8,6 @@ from myblog.models.post import Post
 class HomeView(ListView):
     model = Post
     template_name = 'home.html'
-    context_object_name = 'post_list'
     paginate_by = 5
 
     def get_queryset(self):

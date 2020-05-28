@@ -1,0 +1,32 @@
+<div class="card-list">
+    {% for object in object_list %}
+        <div class="card shadow-sm mb-4">
+            <div class="card-body">
+                {% if object.title %}  {# it is a post #}
+                    <h1 class="card-title"><a href="{% url 'blog:post' object.pk %}">{{ object.title }}</a></h1>
+                {% endif %}
+                <div class="card-subtitle mb-2 text-muted">
+                    <span class="vote">
+                        <div class="btn-group btn-group-sm mr-2" role="group">
+                            {% if user.is_authenticated %}
+                                <button type="button" class="btn btn-outline-success"><b>+</b></button>
+                                <button type="button" class="btn btn-outline-secondary" disabled>{{ object.rating }}</button>
+                                <button type="button" class="btn btn-outline-danger"><b>-</b></button>
+                            {% else %}
+                                <button type="button" class="btn btn-outline-success" disabled><b>+</b></button>
+                                <button type="button" class="btn btn-outline-secondary" disabled>{{ object.rating }}</button>
+                                <button type="button" class="btn btn-outline-danger" disabled><b>-</b></button>
+                            {% endif %}
+                        </div>
+                    </span>
+                    Created at {{ object.pub_date }} by
+                    <a href="{% url 'blog:user_posts' object.user.username %}">{{ object.user.username }}</a>
+                </div>
+                <p class="card-text"> {{ object.body }}</p>
+            </div>
+        </div>
+    {% endfor %}
+    {% if not object_list %}
+        <p class="lead">No content here</p>
+    {% endif %}
+</div>

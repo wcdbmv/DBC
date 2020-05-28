@@ -10,19 +10,7 @@
     {% endif %}
 
     <!-- Show List of Posts -->
-    <div class="card-list">
-        {% for post in post_list %}
-            <div class="card shadow-sm mb-4">
-                <div class="card-body">
-                    <h1 class="card-title"><a href="{% url 'blog:post' post.pk %}">{{ post.title }}</a></h1>
-                    <div class="card-subtitle mb-2 text-muted"> Created {{ post.pub_date }} by <a
-                            href="{% url 'blog:user_posts' post.user.username %}">{{ post.user.username }}</a>
-                    </div>
-                    <p class="card-text"> {{ post.body }}</p>
-                </div>
-            </div>
-        {% endfor %}
-    </div>
+    {% include "card_list.html" %}
 
     {% include "pagination.html" %}
 

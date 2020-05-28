@@ -5,7 +5,7 @@
     <div class="jumbotron">
         <h1 class="display-4">{{ post.title }}</h1>
         <p class="lead">
-            Created {{ post.pub_date }} by
+            Created at {{ post.pub_date }} by
             <a href="{% url 'blog:user_posts' post.user.username %}">{{ post.user.username }}</a>
         </p>
         <p>{{ post.body }}</p>
@@ -22,23 +22,7 @@
     </div>
 
     <h2>Comments:</h2>
-
-    <div class="card-list">
-        {% for comment in object_list %}
-            <div class="card shadow-sm mb-4">
-                <div class="card-body">
-                    <div class="card-subtitle mb-2 text-muted">
-                        Created {{ comment.pub_date }} by
-                        <a href="{% url 'blog:user_posts' comment.user.username %}">{{ comment.user.username }}</a>
-                    </div>
-                    <p class="card-text"> {{ comment.body }}</p>
-                </div>
-            </div>
-        {% endfor %}
-        {% if not post.comment_set.count %}
-            <p class="lead">No comments here</p>
-        {% endif %}
-    </div>
+    {% include "card_list.html" %}
 
     <!-- Show Comment button only if User is authenticated -->
     {% if user.is_authenticated %}
