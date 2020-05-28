@@ -16,13 +16,8 @@ class FeedView(ListView):
     template_name = 'post_list.html'
     paginate_by = 5
 
-    def get_queryset(self):
-        order = order_by(self.request.GET.get('order_by'))
-        return Post.objects.order_by(order)
-
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        return context
+    def get_ordering(self):
+        return order_by(self.request.GET.get('order_by'))
 
 
 class BlogView(ListView):
@@ -35,8 +30,10 @@ class BlogView(ListView):
         user = get_object_or_404(User, username=username)
         self.kwargs['first_name'] = user.first_name
         self.kwargs['last_name'] = user.last_name
-        order = order_by(self.request.GET.get('order_by'))
-        return Post.objects.filter(user=user).order_by(order)
+        return Post.objects.filter(user=user)
+
+    def get_ordering(self):
+        return order_by(self.request.GET.get('order_by'))
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -51,7 +48,10 @@ class TagView(ListView):
     paginate_by = 5
 
     def get_queryset(self):
-        return Post.objects.filter(tags__tag=self.kwargs['tag']).order_by(order_by(self.request.GET.get('order_by')))
+        return Post.objects.filter(tags__tag=self.kwargs['tag'])
+
+    def get_ordering(self):
+        return order_by(self.request.GET.get('order_by'))
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)

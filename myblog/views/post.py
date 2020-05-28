@@ -8,13 +8,18 @@ from myblog.views.post_list import order_by
 
 
 class PostView(DetailView, MultipleObjectMixin):
-    model = Post
+    model = Post  # for DetailView
     template_name = 'post.html'
-    paginate_by = 5
+
+    paginate_by = 5  # for MultipleObjectMixin
+
+    # cannot define get_queryset for MultipleObjectMixin
+
+    def get_ordering(self):
+        return order_by(self.request.GET.get('order_by'))
 
     def get_context_data(self, **kwargs):
-        order = order_by(self.request.GET.get('order_by'))
-        object_list = Post.objects.get(pk=self.kwargs['pk']).comment_set.order_by(order)
+        object_list = Post.objects.get(pk=self.kwargs['pk']).comment_set.order_by(self.get_ordering())
         context = super().get_context_data(object_list=object_list, **kwargs)
         return context
 
