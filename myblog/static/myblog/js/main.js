@@ -1,35 +1,12 @@
-function vote() {
-    const v = $(this)
-    const type = v.data('type');
-    const pk = v.data('id');
-    const action = v.data('action');
+'use strict';
 
-    $.ajax({
-        url: `/blog/${type}/${pk}/${action}`,
-        type: 'POST',
-        data: {'obj': pk},
-
-        success: function (json) {
-            document.querySelector(`[data-id="${pk}"][data-count="rating"]`).innerHTML = json.rating;
-        }
-    });
-
-    return false;
-}
-
-// Подключение обработчиков
-$(function () {
-    $('[data-action="upvote"]').click(vote);
-    $('[data-action="downvote"]').click(vote);
-});
-
-// Получение переменной cookie по имени
-function getCookie(name) {
+// https://docs.djangoproject.com/en/dev/ref/csrf/#ajax
+const getCookie = name => {
     let cookieValue = null;
     if (document.cookie && document.cookie !== '') {
         const cookies = document.cookie.split(';');
         for (let i = 0; i < cookies.length; ++i) {
-            const cookie = jQuery.trim(cookies[i]);
+            const cookie = cookies[i].trim();
             // Does this cookie string begin with the name we want?
             if (cookie.substring(0, name.length + 1) === (name + '=')) {
                 cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
@@ -40,9 +17,30 @@ function getCookie(name) {
     return cookieValue;
 }
 
-// Настройка AJAX
-$(function () {
-    $.ajaxSetup({
-        headers: {"X-CSRFToken": getCookie("csrftoken")}
+const csrftoken = getCookie('csrftoken');
+
+const postData = async (url, data) => {
+    const response = await fetch(url, {
+        method: 'POST',
+        headers: {
+            "X-CSRFToken": csrftoken,
+        },
+        body: JSON.stringify(data),
     });
+    return await response.json();
+};
+
+const voteListener = event => {
+    event.preventDefault();
+
+    const {type, id, action} = event.target.dataset;
+
+    postData(`/blog/${type}/${id}/${action}`,{'obj': id})
+        .then(json => {
+            document.querySelector(`[data-id="${id}"][data-count="rating"]`).innerHTML = json.rating;
+        });
+};
+
+['upvote', 'downvote'].forEach(action => {
+   document.querySelector(`[data-action="${action}"]`).addEventListener('click', voteListener);
 });

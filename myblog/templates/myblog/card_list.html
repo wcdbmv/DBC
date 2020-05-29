@@ -18,9 +18,9 @@
                             {% else %}
                                 {% define "comment" as type %}
                             {% endif %}
-                            <button type="button" class="btn btn-outline-success" data-id="{{ object.id }}" data-type="{{ type }}" data-action="upvote" {{ button_state }}><b>+</b></button>
+                            <button type="button" class="btn btn-outline-success" data-id="{{ object.id }}" data-type="{{ type }}" data-action="upvote" {{ button_state }}>+</button>
                             <button type="button" class="btn btn-outline-secondary" data-id="{{ object.id }}" data-count="rating" disabled>{{ object.rating }}</button>
-                            <button type="button" class="btn btn-outline-danger" data-id="{{ object.id }}" data-type="{{ type }}" data-action="downvote" {{ button_state }}><b>-</b></button>
+                            <button type="button" class="btn btn-outline-danger" data-id="{{ object.id }}" data-type="{{ type }}" data-action="downvote" {{ button_state }}>-</button>
 
                         </div>
                     </span>
