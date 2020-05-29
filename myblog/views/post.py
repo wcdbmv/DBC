@@ -9,7 +9,7 @@ from myblog.views.post_list import order_by
 
 class PostView(DetailView, MultipleObjectMixin):
     model = Post  # for DetailView
-    template_name = 'post.html'
+    template_name = 'myblog/post.html'
 
     paginate_by = 5  # for MultipleObjectMixin
 
@@ -27,7 +27,7 @@ class PostView(DetailView, MultipleObjectMixin):
 class PostCreate(LoginRequiredMixin, CreateView):
     model = Post
     fields = ['title', 'body']
-    template_name = 'create_post.html'
+    template_name = 'myblog/create_post.html'
     login_url = reverse_lazy('login')
 
     def form_valid(self, form):
@@ -38,7 +38,7 @@ class PostCreate(LoginRequiredMixin, CreateView):
 class PostUpdate(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
     model = Post
     fields = ['title', 'body']
-    template_name = 'create_post.html'
+    template_name = 'myblog/create_post.html'
     login_url = reverse_lazy('login')
 
     def test_func(self):
@@ -47,7 +47,7 @@ class PostUpdate(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
 
 class PostDelete(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
     model = Post
-    template_name = 'post_confirm_delete.html'
+    template_name = 'myblog/post_confirm_delete.html'
     success_url = reverse_lazy('blog:feed')
     login_url = reverse_lazy('login')
 

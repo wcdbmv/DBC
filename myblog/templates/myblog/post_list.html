@@ -1,4 +1,4 @@
-{% extends "base.html" %}
+{% extends "myblog/base.html" %}
 
 {% block content %}
 
@@ -14,8 +14,8 @@
     {% endif %}
 
     <!-- Show List of Posts -->
-    {% include "card_list.html" %}
+    {% include "myblog/card_list.html" %}
 
-    {% include "pagination.html" %}
+    {% include "myblog/pagination.html" %}
 
 {% endblock content %}

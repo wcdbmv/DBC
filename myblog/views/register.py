@@ -7,7 +7,7 @@ from django.views.generic import CreateView
 class RegisterView(CreateView):
     model = User
     fields = ['username', 'password', 'first_name', 'last_name', 'email']
-    template_name = 'register.html'
+    template_name = 'myblog/register.html'
     success_url = reverse_lazy('login')
 
     def form_valid(self, form):

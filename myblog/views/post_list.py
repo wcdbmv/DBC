@@ -13,7 +13,7 @@ def order_by(order):
 
 class FeedView(ListView):
     model = Post
-    template_name = 'post_list.html'
+    template_name = 'myblog/post_list.html'
     paginate_by = 5
 
     def get_ordering(self):
@@ -22,7 +22,7 @@ class FeedView(ListView):
 
 class BlogView(ListView):
     model = Post
-    template_name = 'post_list.html'
+    template_name = 'myblog/post_list.html'
     paginate_by = 5
 
     def get_queryset(self):
@@ -44,7 +44,7 @@ class BlogView(ListView):
 
 class TagView(ListView):
     model = Post
-    template_name = 'post_list.html'
+    template_name = 'myblog/post_list.html'
     paginate_by = 5
 
     def get_queryset(self):

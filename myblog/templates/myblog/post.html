@@ -1,4 +1,4 @@
-{% extends "base.html" %}
+{% extends "myblog/base.html" %}
 
 {% block content %}
 
@@ -22,7 +22,7 @@
     </div>
 
     <h2>Comments:</h2>
-    {% include "card_list.html" %}
+    {% include "myblog/card_list.html" %}
 
     <!-- Show Comment button only if User is authenticated -->
     {% if user.is_authenticated %}
@@ -31,6 +31,6 @@
         </a>
     {% endif %}
 
-    {% include "pagination.html" %}
+    {% include "myblog/pagination.html" %}
 
 {% endblock content %}
