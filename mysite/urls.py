@@ -21,11 +21,11 @@ from django.urls import include, path
 from myblog.views.register import RegisterView
 
 urlpatterns = [
-    path('', lambda r: HttpResponseRedirect('blog/')),
+    path('', lambda r: HttpResponseRedirect('blog/feed/')),
     path('admin/', admin.site.urls),
     path('blog/', include('myblog.urls')),
     path('login/', auth_views.LoginView.as_view(template_name='login.html'), name='login'),
-    path('logout/', auth_views.LogoutView.as_view(next_page='blog:home')),
+    path('logout/', auth_views.LogoutView.as_view(next_page='blog:feed')),
     path('register/', RegisterView.as_view(), name='register'),
     path('', include('django.contrib.auth.urls')),  # for logout
 ]

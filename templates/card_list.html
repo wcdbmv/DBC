@@ -1,3 +1,5 @@
+{% load define %}
+
 <div class="card-list">
     {% for object in object_list %}
         <div class="card shadow-sm mb-4">
@@ -8,15 +10,18 @@
                 <div class="card-subtitle mb-2 text-muted">
                     <span class="vote mr-2">
                         <div class="btn-group btn-group-sm" role="group">
-                            {% if user.is_authenticated %}
-                                <button type="button" class="btn btn-outline-success"><b>+</b></button>
-                                <button type="button" class="btn btn-outline-secondary" disabled>{{ object.rating }}</button>
-                                <button type="button" class="btn btn-outline-danger"><b>-</b></button>
-                            {% else %}
-                                <button type="button" class="btn btn-outline-success" disabled><b>+</b></button>
-                                <button type="button" class="btn btn-outline-secondary" disabled>{{ object.rating }}</button>
-                                <button type="button" class="btn btn-outline-danger" disabled><b>-</b></button>
+                            {% if not user.is_authenticated %}
+                                {% define "disabled" as button_state %}
                             {% endif %}
+                            {% if object.title %}
+                                {% define "post" as type %}
+                            {% else %}
+                                {% define "comment" as type %}
+                            {% endif %}
+                            <button type="button" class="btn btn-outline-success" data-id="{{ object.id }}" data-type="{{ type }}" data-action="upvote" {{ button_state }}><b>+</b></button>
+                            <button type="button" class="btn btn-outline-secondary" data-id="{{ object.id }}" data-count="rating" disabled>{{ object.rating }}</button>
+                            <button type="button" class="btn btn-outline-danger" data-id="{{ object.id }}" data-type="{{ type }}" data-action="downvote" {{ button_state }}><b>-</b></button>
+
                         </div>
                     </span>
                     <span class="info mr-2">
