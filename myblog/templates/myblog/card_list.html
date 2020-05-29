@@ -4,8 +4,8 @@
     {% for object in object_list %}
         <div class="card shadow-sm mb-4">
             <div class="card-body">
-                {% if object.title %}  {# it is a post #}
-                    <h1 class="card-title"><a href="{% url 'blog:post' object.pk %}">{{ object.title }}</a></h1>
+                {% if object.title %}  {# it is an article #}
+                    <h1 class="card-title"><a href="{% url 'blog:article' object.pk %}">{{ object.title }}</a></h1>
                 {% endif %}
                 <div class="card-subtitle mb-2 text-muted">
                     <span class="vote mr-2">
@@ -14,7 +14,7 @@
                                 {% define "disabled" as button_state %}
                             {% endif %}
                             {% if object.title %}
-                                {% define "post" as type %}
+                                {% define "article" as type %}
                             {% else %}
                                 {% define "comment" as type %}
                             {% endif %}
@@ -26,9 +26,9 @@
                     </span>
                     <span class="info mr-2">
                         Created at {{ object.pub_date }} by
-                    <a href="{% url 'blog:user_posts' object.user.username %}">{{ object.user.username }}</a>
+                    <a href="{% url 'blog:user_articles' object.user.username %}">{{ object.user.username }}</a>
                     </span>
-                    {% if object.tags.all %}  {# it is a post #}
+                    {% if object.tags.all %}  {# it is an article #}
                         <span class="tags">
                             Tags:
                             {% for tag in object.tags.all %}

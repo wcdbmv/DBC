@@ -2,7 +2,7 @@ from django.contrib.auth.models import User
 from django.shortcuts import get_object_or_404
 from django.views.generic import ListView
 
-from myblog.models.post import Post
+from myblog.models.article import Article
 
 
 def order_by(order):
@@ -12,8 +12,8 @@ def order_by(order):
 
 
 class FeedView(ListView):
-    model = Post
-    template_name = 'myblog/post_list.html'
+    model = Article
+    template_name = 'myblog/article_list.html'
     paginate_by = 5
 
     def get_ordering(self):
@@ -21,8 +21,8 @@ class FeedView(ListView):
 
 
 class BlogView(ListView):
-    model = Post
-    template_name = 'myblog/post_list.html'
+    model = Article
+    template_name = 'myblog/article_list.html'
     paginate_by = 5
 
     def get_queryset(self):
@@ -30,7 +30,7 @@ class BlogView(ListView):
         user = get_object_or_404(User, username=username)
         self.kwargs['first_name'] = user.first_name
         self.kwargs['last_name'] = user.last_name
-        return Post.objects.filter(user=user).order_by(self.get_ordering())
+        return Article.objects.filter(user=user).order_by(self.get_ordering())
 
     def get_ordering(self):
         return order_by(self.request.GET.get('order_by'))
@@ -43,12 +43,12 @@ class BlogView(ListView):
 
 
 class TagView(ListView):
-    model = Post
-    template_name = 'myblog/post_list.html'
+    model = Article
+    template_name = 'myblog/article_list.html'
     paginate_by = 5
 
     def get_queryset(self):
-        return Post.objects.filter(tags__tag=self.kwargs['tag']).order_by(self.get_ordering())
+        return Article.objects.filter(tags__tag=self.kwargs['tag']).order_by(self.get_ordering())
 
     def get_ordering(self):
         return order_by(self.request.GET.get('order_by'))

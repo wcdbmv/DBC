@@ -3,7 +3,7 @@ from django.urls import reverse, reverse_lazy
 from django.views.generic import CreateView
 
 from myblog.models.comment import Comment
-from myblog.models.post import Post
+from myblog.models.article import Article
 
 
 class CommentCreate(LoginRequiredMixin, CreateView):
@@ -14,8 +14,8 @@ class CommentCreate(LoginRequiredMixin, CreateView):
 
     def form_valid(self, form):
         form.instance.user = self.request.user
-        form.instance.post = Post.objects.get(id=self.kwargs['pk'])
+        form.instance.article = Article.objects.get(id=self.kwargs['pk'])
         return super().form_valid(form)
 
     def get_success_url(self):
-        return reverse('blog:post', kwargs={'pk': self.kwargs['pk']})
+        return reverse('blog:article', kwargs={'pk': self.kwargs['pk']})

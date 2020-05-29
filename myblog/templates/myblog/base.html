@@ -29,10 +29,10 @@
             <ul class="nav navbar-nav ">
                 {% if user.is_authenticated %}
                     <li class="nav-item {% if user.username in request.get_full_path %}active{% endif %}">
-                        <a class="nav-link" href="{% url 'blog:user_posts' user.username %}">My Blog</a>
+                        <a class="nav-link" href="{% url 'blog:user_articles' user.username %}">My Blog</a>
                     </li>
-                    <li class="nav-item {% if request.get_full_path == '/blog/post/create/' %}active{% endif %}">
-                        <a class="nav-link" href="{% url 'blog:create_post' %}">New Post</a>
+                    <li class="nav-item {% if request.get_full_path == '/blog/article/create/' %}active{% endif %}">
+                        <a class="nav-link" href="{% url 'blog:create_article' %}">New Article</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="{% url 'logout' %}">Sign Out</a>
