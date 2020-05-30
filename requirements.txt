@@ -1,0 +1,4 @@
+Django
+Faker
+wheel
+psycopg2
