@@ -19,7 +19,9 @@ class Command(BaseCommand):
         parser.add_argument('-u', '--users', type=int, default=0)
         parser.add_argument('-t', '--tags', type=int, default=0)
         parser.add_argument('-T', '--max-tags-per-article', type=int, default=0)
+        parser.add_argument('-s', '--max-sentences-per-article', type=int, default=15)
         parser.add_argument('-a', '--articles', type=int, default=0)
+        parser.add_argument('-S', '--max-sentences-per-comment', type=int, default=8)
         parser.add_argument('-c', '--comments', type=int, default=0)
         parser.add_argument('-A', '--max-votes-per-article', type=int, default=0)
         parser.add_argument('-C', '--max-votes-per-comment', type=int, default=0)
@@ -61,13 +63,13 @@ class Command(BaseCommand):
         return 1 if fake.random.random() < kindness_coefficient else -1
 
     @staticmethod
-    def create_articles(articles, max_tags_per_article):
+    def create_articles(articles, max_tags_per_article, max_sentences_per_article):
         user_id_max = User.objects.count()
         Article.objects.bulk_create(
             [
                 Article(
                     title=fake.sentence(),
-                    body=fake.paragraph(nb_sentences=15),
+                    body=fake.paragraph(nb_sentences=max_sentences_per_article),
                     user_id=Command.fast_randint(1, user_id_max),
                 )
                 for i in range(articles)
@@ -90,17 +92,17 @@ class Command(BaseCommand):
         through_model.objects.bulk_create(through_list)
 
     @staticmethod
-    def create_comments(articles):
+    def create_comments(comments, max_sentences_per_comment):
         user_id_max = User.objects.count()
         article_id_max = Article.objects.count()
         Comment.objects.bulk_create(
             [
                 Comment(
-                    body=fake.paragraph(nb_sentences=15),
+                    body=fake.paragraph(nb_sentences=max_sentences_per_comment),
                     user_id=Command.fast_randint(1, user_id_max),
                     article_id=Command.fast_randint(1, article_id_max),
                 )
-                for i in range(articles)
+                for i in range(comments)
             ]
         )
 
@@ -135,15 +137,24 @@ class Command(BaseCommand):
         model_cls.objects.bulk_update(models, ['rating'])
 
     def handle(self, *args, **options):
-        print(f'Generate {options["users"]} users')
-        self.create_users(options['users'])
-        print(f'Generate {options["tags"]} tags')
-        self.create_tags(options['tags'])
-        print(f'Generate {options["articles"]} articles')
-        self.create_articles(options['articles'], options['max_tags_per_article'])
-        print(f'Generate {options["comments"]} comments')
-        self.create_comments(options['comments'])
-        print(f'Generate up to {options["max_votes_per_article"]} votes for each article')
-        self.generate_votes_for_model(Article, options["max_votes_per_article"])
-        print(f'Generate up to {options["max_votes_per_comment"]} votes for each comment')
-        self.generate_votes_for_model(Comment, options["max_votes_per_comment"])
+        if (users := options["users"]) > 0:
+            print(f'Generate {users} users')
+            self.create_users(users)
+        if (tags := options['tags']) > 0:
+            print(f'Generate {tags} tags')
+            self.create_tags(tags)
+        if (articles := options['articles']) > 0:
+            max_tags_per_article = options['max_tags_per_article']
+            max_sentences_per_article = options['max_sentences_per_article']
+            print(f'Generate {articles} articles with up to {max_sentences_per_article} sentences and up to {max_tags_per_article} tags for each article')
+            self.create_articles(articles, max_tags_per_article, max_sentences_per_article)
+        if (comments := options['comments']) > 0:
+            max_sentences_per_comment = options['max_sentences_per_comment']
+            print(f'Generate {comments} comments with up to {max_sentences_per_comment} sentences for each comment')
+            self.create_comments(comments, max_sentences_per_comment)
+        if (max_votes_per_article := options["max_votes_per_article"]) > 0:
+            print(f'Generate up to {max_votes_per_article} votes for each article')
+            self.generate_votes_for_model(Article, max_votes_per_article)
+        if (max_votes_per_comment := options["max_votes_per_comment"]) > 0:
+            print(f'Generate up to {max_votes_per_comment} votes for each comment')
+            self.generate_votes_for_model(Comment, max_votes_per_comment)

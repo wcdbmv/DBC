@@ -14,7 +14,7 @@ urlpatterns = [
     # ex: /blog/user/wcdbmv
     path('user/<str:username>', BlogView.as_view(), name='user_articles'),
     # ex: /blog/article/5/
-    path('article/<int:pk>/', ArticleView.as_view(), name='article'),
+    path('article/<int:pk>/', ArticleView.as_view(), name='articles'),
     # ex: /blog/article/5/upvote
     path('article/<int:pk>/upvote', VoteView.as_view(model=Article, vote_value=1), name='article_upvote'),
     # ex: /blog/article/5/downvote

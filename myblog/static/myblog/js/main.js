@@ -42,5 +42,6 @@ const voteListener = event => {
 };
 
 ['upvote', 'downvote'].forEach(action => {
-   document.querySelector(`[data-action="${action}"]`).addEventListener('click', voteListener);
+   document.querySelectorAll(`[data-action="${action}"]`)
+       .forEach(element => element.addEventListener('click', voteListener));
 });

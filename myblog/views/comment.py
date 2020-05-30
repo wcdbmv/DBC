@@ -18,4 +18,4 @@ class CommentCreate(LoginRequiredMixin, CreateView):
         return super().form_valid(form)
 
     def get_success_url(self):
-        return reverse('blog:article', kwargs={'pk': self.kwargs['pk']})
+        return reverse('blog:articles', kwargs={'pk': self.kwargs['pk']})

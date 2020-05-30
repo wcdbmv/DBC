@@ -5,7 +5,7 @@
         <div class="card shadow-sm mb-4">
             <div class="card-body">
                 {% if object.title %}  {# it is an article #}
-                    <h1 class="card-title"><a href="{% url 'blog:article' object.pk %}">{{ object.title }}</a></h1>
+                    <h1 class="card-title"><a href="{% url 'blog:articles' object.pk %}">{{ object.title }}</a></h1>
                 {% endif %}
                 <div class="card-subtitle mb-2 text-muted">
                     <span class="vote mr-2">
