@@ -1,16 +1,264 @@
-\chapter*{Приложение А}
+\chapter*{Приложение А. Сгенерированная структура базы данных}
+\addcontentsline{toc}{chapter}{Приложение А. Сгенерированная структура базы данных}
+\label{chp:attachment-a}
 
-\lstinputlisting[language=Python, linerange={10-24}]{../myblog/views/article.py}
-\lstinputlisting[language=Python, linerange={27-35}]{../myblog/views/article.py}
-\lstinputlisting[language=Python, linerange={38-42}]{../myblog/views/article.py}
-\lstinputlisting[language=Python, linerange={45-49}]{../myblog/views/article.py}
+\begin{lstlisting}[caption={Сгенерированная структура базы данных}, label={lst:sqlmigrate}, language=SQL]
+BEGIN;
 
-\lstinputlisting[language=Python, linerange={14-20}]{../myblog/views/article_list.py}
-\lstinputlisting[language=Python, linerange={23-42}]{../myblog/views/article_list.py}
-\lstinputlisting[language=Python, linerange={45-59}]{../myblog/views/article_list.py}
+--
+-- Create model Article
+--
+CREATE TABLE "myblog_article" (
+	"id" serial NOT NULL PRIMARY KEY,
+	"title" varchar(80) NOT NULL,
+	"body" text NOT NULL,
+	"pub_date" timestamp with time zone NOT NULL,
+	"rating" smallint NOT NULL
+);
 
-\lstinputlisting[language=Python, linerange={9-21}]{../myblog/views/comment.py}
+--
+-- Create model Tag
+--
+CREATE TABLE "myblog_tag" (
+	"id" serial NOT NULL PRIMARY KEY,
+	"tag" varchar(50) NOT NULL UNIQUE
+);
 
-\lstinputlisting[language=Python, linerange={7-16}]{../myblog/views/register.py}
+--
+-- Create model Vote
+--
+CREATE TABLE "myblog_vote" (
+	"id" serial NOT NULL PRIMARY KEY,
+	"value" smallint NOT NULL,
+	"object_id" integer NOT NULL CHECK ("object_id" >= 0),
+	"content_type_id" integer NOT NULL,
+	"user_id" integer NOT NULL
+);
 
-\lstinputlisting[language=Python, linerange={10-42}]{../myblog/views/vote.py}
+--
+-- Create model Comment
+--
+CREATE TABLE "myblog_comment" (
+	"id" serial NOT NULL PRIMARY KEY,
+	"body" text NOT NULL,
+	"pub_date" timestamp with time zone NOT NULL,
+	"rating" smallint NOT NULL,
+	"article_id" integer NOT NULL,
+	"user_id" integer NOT NULL
+);
+
+--
+-- Add field tags to article
+--
+CREATE TABLE "myblog_article_tags" (
+	"id" serial NOT NULL PRIMARY KEY,
+	"article_id" integer NOT NULL,
+	"tag_id" integer NOT NULL
+);
+
+--
+-- Add field user to article
+--
+ALTER TABLE "myblog_article"
+	ADD COLUMN "user_id" integer NOT NULL
+	CONSTRAINT "myblog_article_user_id_7728319b_fk_auth_user_id"
+	REFERENCES "auth_user"("id") DEFERRABLE INITIALLY DEFERRED;
+SET CONSTRAINTS "myblog_article_user_id_7728319b_fk_auth_user_id" IMMEDIATE;
+
+CREATE INDEX "myblog_tag_tag_e004ad11_like" ON "myblog_tag" ("tag" varchar_pattern_ops);
+
+ALTER TABLE "myblog_vote"
+	ADD CONSTRAINT "myblog_vote_content_type_id_06bf44c6_fk_django_content_type_id"
+	FOREIGN KEY ("content_type_id") REFERENCES "django_content_type" ("id")
+	DEFERRABLE INITIALLY DEFERRED;
+
+ALTER TABLE "myblog_vote"
+	ADD CONSTRAINT "myblog_vote_user_id_89a11e40_fk_auth_user_id"
+	FOREIGN KEY ("user_id") REFERENCES "auth_user" ("id") DEFERRABLE INITIALLY DEFERRED;
+
+CREATE INDEX "myblog_vote_content_type_id_06bf44c6" ON "myblog_vote" ("content_type_id");
+
+CREATE INDEX "myblog_vote_user_id_89a11e40" ON "myblog_vote" ("user_id");
+
+ALTER TABLE "myblog_comment"
+	ADD CONSTRAINT "myblog_comment_article_id_44b1452c_fk_myblog_article_id"
+	FOREIGN KEY ("article_id") REFERENCES "myblog_article" ("id")
+	DEFERRABLE INITIALLY DEFERRED;
+
+ALTER TABLE "myblog_comment"
+	ADD CONSTRAINT "myblog_comment_user_id_1d5be68b_fk_auth_user_id"
+	FOREIGN KEY ("user_id") REFERENCES "auth_user" ("id") DEFERRABLE INITIALLY DEFERRED;
+
+CREATE INDEX "myblog_comment_article_id_44b1452c" ON "myblog_comment" ("article_id");
+
+CREATE INDEX "myblog_comment_user_id_1d5be68b" ON "myblog_comment" ("user_id");
+
+ALTER TABLE "myblog_article_tags"
+	ADD CONSTRAINT "myblog_article_tags_article_id_tag_id_7e4e85c7_uniq"
+	UNIQUE ("article_id", "tag_id");
+
+ALTER TABLE "myblog_article_tags"
+	ADD CONSTRAINT "myblog_article_tags_article_id_04a3a3b7_fk_myblog_article_id"
+	FOREIGN KEY ("article_id") REFERENCES "myblog_article" ("id")
+	DEFERRABLE INITIALLY DEFERRED;
+
+ALTER TABLE "myblog_article_tags"
+	ADD CONSTRAINT "myblog_article_tags_tag_id_10cdc0fe_fk_myblog_tag_id"
+	FOREIGN KEY ("tag_id") REFERENCES "myblog_tag" ("id") DEFERRABLE INITIALLY DEFERRED;
+
+CREATE INDEX "myblog_article_tags_article_id_04a3a3b7" ON "myblog_article_tags" ("article_id");
+
+CREATE INDEX "myblog_article_tags_tag_id_10cdc0fe" ON "myblog_article_tags" ("tag_id");
+
+CREATE INDEX "myblog_article_user_id_7728319b" ON "myblog_article" ("user_id");
+
+COMMIT;
+\end{lstlisting}
+
+\chapter*{Приложение Б. Представления}
+\addcontentsline{toc}{chapter}{Приложение Б. Представления}
+\label{chp:attachment-b}
+
+В листингах \ref{lst:ArticleView}–\ref{lst:ArticleDelete} показаны представления, связанные со страницей статьи.
+Используются стандартные представления \code{DetailView}, \code{CreateView}, \code{UpdateView}, \code{DeleteView} из модуля \code{django.views.generic}.
+
+\lstinputlisting[
+	caption={Представление страницы статьи},
+	label={lst:ArticleView},
+	language=Python,
+	linerange={10-24}
+]{../myblog/views/article.py}
+
+\lstinputlisting[
+	caption={Представление страницы создания статьи},
+	label={lst:ArticleCreate},
+	language=Python,
+	linerange={27-35}
+]{../myblog/views/article.py}
+
+\lstinputlisting[
+	caption={Представление страницы редактирования статьи},
+	label={lst:ArticleUpdate},
+	language=Python,
+	linerange={38-42}
+]{../myblog/views/article.py}
+
+\lstinputlisting[
+	caption={Представление страницы удаления статьи},
+	label={lst:ArticleDelete},
+	language=Python,
+	linerange={45-49}
+]{../myblog/views/article.py}
+
+В листингах \ref{lst:FeedView}–\ref{lst:TagView} показаны представления списка статей, основанные на стандартном представлении \code{ListView} из модуля \code{django.views.generic}.
+
+\lstinputlisting[
+	caption={Представление страницы ленты статей},
+	label={lst:FeedView},
+	language=Python,
+	linerange={14-20}
+]{../myblog/views/article_list.py}
+
+\lstinputlisting[
+	caption={Представление страницы статей определённого пользователя},
+	label={lst:BlogView},
+	language=Python,
+	linerange={23-42}
+]{../myblog/views/article_list.py}
+
+\lstinputlisting[
+	caption={Представление страницы статей определённого тэга},
+	label={lst:TagView},
+	language=Python,
+	linerange={45-59}
+]{../myblog/views/article_list.py}
+
+В листингах \ref{lst:CommentCreate}–\ref{lst:CommentDelete} показаны представления, связанные с комментариями.
+Используются стандартные представления \code{DetailView}, \code{CreateView}, \code{UpdateView}, \code{DeleteView} из модуля \code{django.views.generic}.
+
+В листингах \ref{lst:CommentCreate} и \ref{lst:RegisterView} показаны представления страницы создания комментария и регистрации соответственно.
+Используются стандартное представление \code{CreateView} из модуля \code{django.views.generic}.
+
+\lstinputlisting[
+	caption={Представление страницы создания комментария},
+	label={lst:CommentCreate},
+	language=Python,
+	linerange={9-21}
+]{../myblog/views/comment.py}
+
+\lstinputlisting[
+	caption={Представление страницы обновления комментария},
+	label={lst:CommentUpdate},
+	language=Python,
+	linerange={24-31}
+]{../myblog/views/comment.py}
+
+\lstinputlisting[
+	caption={Представление страницы удаления комментария},
+	label={lst:CommentDelete},
+	language=Python,
+	linerange={34-40}
+]{../myblog/views/comment.py}
+
+\lstinputlisting[
+	caption={Представление страницы регистрации},
+	label={lst:RegisterView},
+	language=Python,
+	linerange={7-16}
+]{../myblog/views/register.py}
+
+\chapter*{Приложение В. Шаблоны}
+\addcontentsline{toc}{chapter}{Приложение В. Шаблоны}
+\label{chp:attachment-c}
+
+\lstinputlisting[
+	caption={Шаблон основы страницы},
+	label={lst:template-base},
+	language=HTML
+]{../myblog/templates/myblog/base.html}
+
+\lstinputlisting[
+	caption={Шаблон страниц списка статей},
+	label={lst:template-article-list},
+	language=HTML
+]{../myblog/templates/myblog/article_list.html}
+
+\lstinputlisting[
+	caption={Шаблон пагинации},
+	label={lst:template-pagination},
+	language=HTML
+]{../myblog/templates/myblog/pagination.html}
+
+\lstinputlisting[
+	caption={Шаблон страницы логина},
+	label={lst:template-login},
+	language=HTML
+]{../myblog/templates/myblog/login.html}
+
+\lstinputlisting[
+	caption={Шаблон страницы регистрации},
+	label={lst:template-register},
+	language=HTML
+]{../myblog/templates/myblog/register.html}
+
+\lstinputlisting[
+	caption={Шаблон страницы создания},
+	label={lst:template-create},
+	language=HTML
+]{../myblog/templates/myblog/create.html}
+
+\lstinputlisting[
+	caption={Шаблон страницы подтверждения удаления},
+	label={lst:template-confirm-delete},
+	language=HTML
+]{../myblog/templates/myblog/confirm_delete.html}
+
+\chapter*{Приложение Г. Генерация фейковых данных}
+\addcontentsline{toc}{chapter}{Приложение Г. Генерация фейковых данных}
+\label{chp:attachment-d}
+
+\lstinputlisting[
+	caption={Генерация фейковых данных},
+	label={lst:generate},
+	language=Python,
+]{../myblog/management/commands/generate.py}
