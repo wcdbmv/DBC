@@ -9,7 +9,7 @@ from myblog.models.article import Article
 class CommentCreate(LoginRequiredMixin, CreateView):
     model = Comment
     fields = ['body']
-    template_name = 'myblog/create_comment.html'
+    template_name = 'myblog/create.html'
     login_url = reverse_lazy('login')
 
     def form_valid(self, form):
@@ -24,7 +24,7 @@ class CommentCreate(LoginRequiredMixin, CreateView):
 class CommentUpdate(LoginRequiredMixin, UpdateView):
     model = Comment
     fields = ['body']
-    template_name = 'myblog/create_comment.html'
+    template_name = 'myblog/create.html'
     login_url = reverse_lazy('login')
 
     def get_success_url(self):

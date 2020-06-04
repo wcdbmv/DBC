@@ -5,6 +5,15 @@
 
         {% csrf_token %}
 
+        {% if form.title %}
+            <div class="form-group">
+                {% if form.title.errors %}
+                    <label class="alert alert-danger">{{ form.title.errors }}</label>
+                {% endif %}
+                <input type="text" placeholder="Title" class="form-control" name="title" value="{{ form.title.value|default:"" }}" required>
+            </div>
+        {% endif %}
+
         <div class="form-group">
             {% if form.body.errors %}
                 <label class="alert alert-danger">{{ form.body.errors }}</label>

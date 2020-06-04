@@ -27,7 +27,7 @@ class ArticleView(DetailView, MultipleObjectMixin):
 class ArticleCreate(LoginRequiredMixin, CreateView):
     model = Article
     fields = ['title', 'body']
-    template_name = 'myblog/create_article.html'
+    template_name = 'myblog/create.html'
     login_url = reverse_lazy('login')
 
     def form_valid(self, form):
@@ -38,7 +38,7 @@ class ArticleCreate(LoginRequiredMixin, CreateView):
 class ArticleUpdate(LoginRequiredMixin, UpdateView):
     model = Article
     fields = ['title', 'body']
-    template_name = 'myblog/create_article.html'
+    template_name = 'myblog/create.html'
     login_url = reverse_lazy('login')
 
 
