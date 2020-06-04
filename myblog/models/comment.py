@@ -2,6 +2,7 @@ from django.contrib.auth.models import User
 from django.contrib.contenttypes.fields import GenericRelation
 from django.db import models
 
+from myblog.managers.ordered import OrderedQuerySet
 from myblog.models.article import Article
 from myblog.models.vote import Vote
 
@@ -13,6 +14,7 @@ class Comment(models.Model):
     pub_date = models.DateTimeField('date published', auto_now_add=True)
     rating = models.SmallIntegerField(default=0)
     votes = GenericRelation(Vote)
+    objects = OrderedQuerySet.as_manager()
 
     def __str__(self):
         return f'"{self.body[:20]}..." on {self.article.title} by {self.user.username}'

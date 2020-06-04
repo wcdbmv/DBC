@@ -2,8 +2,8 @@ from django.urls import path
 
 from myblog.models.comment import Comment
 from myblog.models.article import Article
-from myblog.views.comment import CommentCreate
 from myblog.views.article import ArticleView, ArticleCreate, ArticleUpdate, ArticleDelete
+from myblog.views.comment import CommentCreate, CommentUpdate, CommentDelete
 from myblog.views.article_list import FeedView, BlogView, TagView
 from myblog.views.vote import VoteView
 
@@ -27,6 +27,10 @@ urlpatterns = [
     path('article/<int:pk>/delete', ArticleDelete.as_view(), name='delete_article'),
     # ex: /blog/article/5/comment/
     path('article/<int:pk>/comment/', CommentCreate.as_view(), name='create_comment'),
+    # ex: /blog/article/5/update
+    path('comment/<int:pk>/update', CommentUpdate.as_view(), name='update_comment'),
+    # ex: /blog/article/5/delete
+    path('comment/<int:pk>/delete', CommentDelete.as_view(), name='delete_comment'),
     # ex: /blog/tag/job
     path('tag/<str:tag>/', TagView.as_view(), name='tag'),
     # ex: /blog/comment/15/upvote

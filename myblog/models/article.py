@@ -3,6 +3,7 @@ from django.contrib.contenttypes.fields import GenericRelation
 from django.db import models
 from django.urls import reverse
 
+from myblog.managers.article import ArticleQuerySet
 from myblog.models.tag import Tag
 from myblog.models.vote import Vote
 
@@ -15,6 +16,7 @@ class Article(models.Model):
     tags = models.ManyToManyField(to=Tag, related_name='articles')
     rating = models.SmallIntegerField(default=0)
     votes = GenericRelation(Vote)
+    objects = ArticleQuerySet.as_manager()
 
     def get_absolute_url(self):
         return reverse('blog:articles', kwargs={'pk': self.pk})
