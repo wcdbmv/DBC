@@ -20,3 +20,8 @@ postgres=# alter role myblog set timezone to 'UTC';
 postgres=# grant all privileges on database myblog to myblog;
 postgres=# \q
 ```
+
+## Docs
+
+- [РПЗ](https://github.com/wcdbmv/DBC/blob/master/doc/build/note.pdf)
+- [Presentation](https://docs.google.com/presentation/d/10508dnoIA5MAv8JEQQX-3zi0mu6ep02MGNGiBs9mBzQ/edit?usp=sharing)
